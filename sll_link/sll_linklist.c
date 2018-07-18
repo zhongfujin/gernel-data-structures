@@ -38,15 +38,11 @@ int sll_link_list_insert_at_head(SLL_LINK_LIST_BASE *list,void *p_node)
         return RET_ERROR;
     }
     SLL_LINK_LIST_NODE *node = (SLL_LINK_LIST_NODE *)p_node;
-    if(list->head == NULL)
+    node->next = list->head;
+    list->head = node;
+    if(list->tail == NULL)
     {
-        list->head = node;
         list->tail = node;
-    }
-    else
-    {
-        node->next = list->head;
-        list->head = node;
     }
     list->len++;
     return RET_SUCCESS;
@@ -97,19 +93,18 @@ int sll_link_list_insert_at_index(SLL_LINK_LIST_BASE *list,void *p_node,int inde
 int sll_link_list_insert_at_tail(SLL_LINK_LIST_BASE *list,void *p_node)
 {
     SLL_LINK_LIST_NODE *node = (SLL_LINK_LIST_NODE *)p_node;
-    if(NULL == list->head)
+    if(NULL != list->tail)
     {
-        list->head = node;
-        list->tail = node;
-        node->next = NULL;
+
+        list->tail->next = node;
     }
     else
     {
-        list->tail->next = node;
-        list->tail = node;
-        node->next = NULL;
+        list->head = node;
     }
     list->len++;
+    list->tail = node;
+    node->next = NULL;
     return RET_SUCCESS;
 }
 
@@ -146,6 +141,8 @@ void *sll_link_list_get_head(SLL_LINK_LIST_BASE *list)
     }
     return list->head;
 }
+
+
 void *sll_link_list_get_tail(SLL_LINK_LIST_BASE *list)
 {
     if(list == NULL)
